@@ -1,31 +1,43 @@
 const PDFDocument = require('pdf-lib').PDFDocument;
 const fs = require('fs');
+const FileAPI = require('file-api'), File = FileAPI.File, FileReader = FileAPI.FileReader;
+
+const expReg = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$/;
+const path = './src/public/temp/merged.pdf';
+
+function fileToBase64(filepath){
+    return new Promise(resolve => {
+        var file = new File(filepath);
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(event) {
+            resolve(event.target.result);
+        };
+    });
+};
 
 module.exports = {
 
     async mergePdf(pdfs){
 
-        let msg = '';
-    
-        // console.log(pdf1Base64);
-        // console.log(pdf2Base64);
-
-        // let pdfBuffer1 = Buffer.from(pdf1Base64, "base64"); 
-        // let pdfBuffer2 = Buffer.from(pdf2Base64, "base64");
-
-        const expReg = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$/;
-
+        let base64result = '';
         let ok = true
         let pdfsToMerge = [];
-        for (const pdf of pdfs){
-            // console.log(expReg.test(pdf))
-            if (expReg.test(pdf)){
-                pdfsToMerge.push(Buffer.from(pdf, "base64"));
-            }else{
-                ok = false;
-                msg = 'Un archivo no esta en base64.';
+
+        fs.unlinkSync(path);
+
+        if (pdfs.length > 1){
+            for (const pdf of pdfs){
+                if (expReg.test(pdf) && pdf.length > 4){
+                    pdfsToMerge.push(Buffer.from(pdf, "base64"));
+                }else{
+                    ok = false;
+                }
             }
+        }else{
+            ok = false;
         }
+        
 
         if (ok){
             const mergedPdf = await PDFDocument.create(); 
@@ -35,11 +47,10 @@ module.exports = {
                 copiedPages.forEach((page) => {
                     mergedPdf.addPage(page); 
                 }); 
-            } 
+            }
 
             const buf = await mergedPdf.save();
 
-            let path = './src/public/temp/merged.pdf'; 
             fs.open(path, 'w', function (err, fd) {
                 fs.write(fd, buf, 0, buf.length, null, function (err) {
                     fs.close(fd, function () {
@@ -47,9 +58,11 @@ module.exports = {
                     }); 
                 }); 
             });
+
+            base64result = await fileToBase64(path);
         }
 
-        return msg;
+        return base64result;
     },
 
 }

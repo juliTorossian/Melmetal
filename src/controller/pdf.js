@@ -1,22 +1,25 @@
 const { mergePdf } = require("../model/pdfMod");
 const fs = require('fs');
 
-
-
 module.exports = {
-    pdfTest(req, res){
+    async pdfTest(req, res){
         var msg = '';
         var pdfs = [];
 
-        pdfs.push(fs.readFileSync("./src/public/temp/!pdf1.txt", 'utf-8'));
-        pdfs.push(fs.readFileSync("./src/public/temp/!pdf2.txt", 'utf-8'));
-        // pdfs.push(fs.readFileSync("./src/public/temp/pdf2.txt", 'utf-8'));
-        // var pdf1Base64 = fs.readFileSync("./src/public/temp/!pdf1.txt", 'utf-8');
-        // var pdf2Base64 = fs.readFileSync("./src/public/temp/!pdf2.txt", 'utf-8');
+        for (const pdf of req.body){
+            console.log(pdf.name);
+            // console.log(pdf.base64);
+            pdfs.push(pdf.base64);
+        }
 
-        msg = mergePdf(pdfs);
+        var base64Result = await mergePdf(pdfs);
+        // console.log(base64Result);
 
-        res.send(msg);
-
+        if (base64Result != ''){
+            res.download("./src/public/temp/merged.pdf")
+            // res.send(base64Result);
+        }else{
+            res.send("Error");
+        }
     },
 }
