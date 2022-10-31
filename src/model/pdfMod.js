@@ -24,7 +24,7 @@ module.exports = {
         let ok = true
         let pdfsToMerge = [];
 
-        fs.unlinkSync(path);
+        // fs.unlinkSync(path);
 
         if (pdfs.length > 1){
             for (const pdf of pdfs){

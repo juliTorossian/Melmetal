@@ -24,6 +24,7 @@ app.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit: 50000
 // app.use(require('./routes/index.js'));
 app.use('/dummy', require('./routes/dummy.js'));
 app.use('/pdf', require('./routes/pdf.js'));
+app.use('/', require('./routes/index.js'));
 
 // Archivos Publicos
 app.use(express.static(path.join(__dirname, 'public')));
