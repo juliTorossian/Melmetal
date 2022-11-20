@@ -16,6 +16,13 @@ CREATE TABLE IF NOT EXISTS token(
     FOREIGN KEY (tokenUsuario) REFERENCES usuario(usuId)
 );
 
+DROP TABLE IF EXISTS paramGen;
+CREATE TABLE IF NOT EXISTS paramGen(
+    paramId         TEXT PRIMARY KEY,
+    paramClave      TEXT NOT NULL,
+    paramValor      TEXT NOT NULL
+);
+
 INSERT INTO usuario(usuUsuario, usuPass)
 VALUES ("hola", "123")
 ;
@@ -24,6 +31,10 @@ SELECT * FROM usuario;
 
 INSERT INTO token(token, tokenDateTime, tokenUsuario)
 VALUES ("token", datetime('now'), 1)
+;
+
+INSERT INTO paramGen(paramId, paramClave, paramValor)
+VALUES ("token", "tiempoObsoleto", "10")
 ;
 
 

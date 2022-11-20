@@ -13,7 +13,7 @@ module.exports = {
 
         // console.log(tokenObsoleto(token));
         // veo si el token esta obsoleto
-        if (tokenObsoleto(token)){
+        if (await tokenObsoleto(token)){
             // si esta obsoleto - no dejo continuar
             res.send("Token invalido");
         }else{
