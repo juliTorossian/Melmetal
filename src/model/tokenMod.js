@@ -64,7 +64,7 @@ module.exports = {
     async tokenObsoleto(token){
         let aux = true;
 
-        let consulta = "SELECT * FROM token WHERE token = ?";
+        let consulta = "SELECT * FROM token WHERE token = ? AND tokenObsoleto = false";
         let where = [token];
         results = await query(consulta, where);
         // console.log(results);

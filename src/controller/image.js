@@ -6,8 +6,8 @@ module.exports = {
 
         let token = req.headers.authorization.split(' ')[1];
 
-        console.log(token);
-        console.log(await tokenObsoleto(token));
+        // console.log(token);
+        // console.log(await tokenObsoleto(token));
         // veo si el token esta obsoleto
         if (await tokenObsoleto(token)){
             // si esta obsoleto - no dejo continuar
@@ -16,14 +16,15 @@ module.exports = {
             
             const imagen = req.file
 
-            // console.log(imagen)
+            console.log(imagen)
 
             let path = await cambiarAGris(imagen);
 
             // console.log(path)
 
             if (path != ''){
-                res.download(path);
+                res.download(path, imagen.originalname);
+                // res.download(path);
                 // res.send(path);
             }else{
                 res.send("Error");
