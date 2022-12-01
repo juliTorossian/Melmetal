@@ -34,4 +34,13 @@ module.exports = {
             }
         }
     },
+    async pdfAddImages(req, res){
+        let token = req.headers.authorization.split(' ')[1];
+        if (await tokenObsoleto(token)){
+            // si esta obsoleto - no dejo continuar
+            res.send("Token invalido");
+        }else{
+            
+        }
+    }
 }

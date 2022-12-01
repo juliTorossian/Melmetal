@@ -64,5 +64,54 @@ module.exports = {
 
         return base64result;
     },
+    async addImgToPdf(pdf, images){
+        const pathImg = './src/public/temp/pdfWithImages.pdf';
+        let imagesBuff = [];
+        let pdfBuff = [];
+
+        const pdfOut = await PDFDocument.create();
+
+        if (images.length > 1){
+
+            if (pdf === null){
+                // no existe pdf inicial
+
+                for (const image of images){
+                    const page = doc.addPage();
+                    // Load the image and store it as a Node.js buffer in memory
+                    let img = Buffer.from(image, "base64");
+                    img = await doc.embedPng(img);
+
+                    // Draw the image on the center of the page
+                    const { width, height } = img.scale(1);
+                    page.drawImage(img, {
+                        x: page.getWidth() / 2 - width / 2,
+                        y: page.getHeight() / 2 - height / 2
+                    });
+                }
+
+            }else{
+                // adjunto las imagenes a un pdf
+                // for (const pdf of pdfs){
+                //     if (expReg.test(pdf) && pdf.length > 4){
+                //         pdfsToMerge.push(Buffer.from(pdf, "base64"));
+                //     }else{
+                //         ok = false;
+                //     }
+                // }
+            }
+            
+            fs.writeFileSync(pathImg, await doc.save());
+
+        }else{
+            ok = false;
+        }
+        
+
+        if (ok){
+            
+        }
+
+    },
 
 }
