@@ -69,7 +69,9 @@ module.exports = {
         let imagesBuff = [];
         let pdfBuff = [];
 
-        const pdfOut = await PDFDocument.create();
+        const doc = await PDFDocument.create();
+
+        pdf = null;
 
         if (images.length > 1){
 
@@ -79,7 +81,7 @@ module.exports = {
                 for (const image of images){
                     const page = doc.addPage();
                     // Load the image and store it as a Node.js buffer in memory
-                    let img = Buffer.from(image, "base64");
+                    let img = Buffer.from(image.base64, "base64");
                     img = await doc.embedPng(img);
 
                     // Draw the image on the center of the page
@@ -111,6 +113,8 @@ module.exports = {
         if (ok){
             
         }
+
+        return pathImg;
 
     },
 

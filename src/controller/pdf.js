@@ -1,4 +1,4 @@
-const { mergePdf } = require("../model/pdfMod");
+const { mergePdf, addImgToPdf } = require("../model/pdfMod");
 const fs = require('fs');
 const { tokenObsoleto } = require("../model/tokenMod");
 
@@ -40,7 +40,20 @@ module.exports = {
             // si esta obsoleto - no dejo continuar
             res.send("Token invalido");
         }else{
-            
+
+            const pdf = req.body.pdf
+            const images = req.body.images
+
+            console.log(pdf.name)
+
+            images.forEach(img => {
+                console.log(img.name)    
+            });
+
+            let aux = await addImgToPdf(pdf.base64, images);
+
+            res.send(aux);
+
         }
     }
 }
